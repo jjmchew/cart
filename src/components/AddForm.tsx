@@ -12,7 +12,6 @@ const AddForm = ({ onAdd }: AddFormProps) => {
 
   const handleAdd = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    console.log('Addform handleSubmit', productName, price, quantity);
     onAdd({
       title: productName,
       price: parseFloat(price),

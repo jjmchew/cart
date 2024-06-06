@@ -3,9 +3,10 @@ import { ProductType } from '../types.ts';
 
 interface CartProps {
   items: ProductType[],
+  onCheckout: () => void,
 }
 
-const Cart = ({ items }: CartProps) => {
+const Cart = ({ items, onCheckout }: CartProps) => {
 
   const calcTotal = () => {
     return items.reduce((acc, obj) => acc + (obj.quantity * obj.price), 0);
@@ -36,7 +37,7 @@ const Cart = ({ items }: CartProps) => {
           </tfoot>
         </table>
         <div className="checkout-button">
-          <button className="checkout">Checkout</button>
+          <button className="checkout" onClick={onCheckout}>Checkout</button>
         </div>
       </div>
     </>

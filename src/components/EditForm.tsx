@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { ProductType } from '../types.ts';
+import { ProductType, CallbackType } from '../types.ts';
 
 interface EditFormProps extends ProductType {
   onCancel: () => void;
+  onEdit: (updatedProduct: ProductType, callback?: CallbackType) => void;
 }
 
-const EditForm = ({ title, price, quantity, onCancel }: EditFormProps) => {
+const EditForm = ({ _id, title, price, quantity, onCancel, onEdit }: EditFormProps) => {
   const [formTitle, setFormTitle] = useState(title);
   const [formPrice, setFormPrice] = useState(price.toString());
   const [formQuantity, setFormQuantity] = useState(quantity.toString());
@@ -14,7 +15,7 @@ const EditForm = ({ title, price, quantity, onCancel }: EditFormProps) => {
     e.preventDefault();
     if (formTitle === title && formPrice === price.toString() && formQuantity === quantity.toString()) return;
 
-    console.log('EditForm handleUpdate: ', formTitle, formPrice, formQuantity);
+    onEdit({ _id: _id, title: formTitle, price: parseFloat(formPrice), quantity: parseInt(formQuantity, 10) }, onCancel);
   };
 
   return (

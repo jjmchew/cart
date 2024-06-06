@@ -9,4 +9,6 @@ export interface NewProductType extends Omit<ProductType, '_id'> { }
 
 export type CallbackType = Function | null;
 
+export interface CartType extends ProductType { }
+
 
