@@ -1,30 +1,27 @@
-# React + TypeScript + Vite
+# Shopping cart app (James)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Issue
+- We discussed "add to cart button spamming" - I've left the code as it was when we discussed it (with the `console.log` statements still included)
+- Related to this issue:  I noticed in `App.tsx` on lines 99/99/100 that I perhaps should also use `Promise.all` since I want to BOTH add a cart item AND reduce the product quantity before anything else happens
+  - I belive this would fix the issue of adding more items to the cart (when spamming the button) than actual quantities available
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- `App.tsx` `addCartHelper` : within this helper when should dispatch functions be used?
+  - initially, I used a dispatch function for both updating quantities AND just adding a new item
+  - however, it seemed like when I used the dispatch function for adding a new item, multiple versions of the product were added (I suspect this has something to do with when the state is being updated?)
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Questions
+- `App.tsx`:  Should I have put all of the handlers into a `helper.tsx` file? (i.e., `handleAddProduct`, `handleEdit`, `handleDelete`, etc.)
+  - The trade-off is that this would definitely have made things messier if I wanted to create on-screen error messages
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- `App.tsx`:  Should I try to reduce the repetition within all of the handlers? (e.g., using partial function application and another callback function parameter?)
+  - this would shorten `App.tsx` if I wanted to keep all of the handlers with `App.tsx`
+
+- `App.tsx' `addCartHelper` : should this also be in a separate helper file?
+  - to do that, I'd have to pass into the function the `setCart` state setter:  Is that an anti-pattern?
+  - again, I'm asking since `App.tsx` is becoming quite large....
+
+
