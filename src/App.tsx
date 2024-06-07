@@ -97,14 +97,22 @@ function App() {
     const product = products.find(product => product._id === productId);
     if (!product || product.quantity === 0) return;
 
+    // Note optimistic update of products state (before confirmation of successful db request)
+    // - since the back end db does not implement 'transactions' to ensure that a product cannot be added to the cart
+    //   independently of removing that quantity, it is possible for product quantities and cart quantities to get
+    //   "out-of-sync" and for more products to be added to the cart than exist
+    // - optimistic updates use the fast nature of the client-side to prevent more requests being submitted
+    //   to the back-end than should be possible
+
+    setProducts(prevProducts => prevProducts.map((oldProduct: ProductType) => {
+      if (oldProduct._id === productId) {
+        return { ...oldProduct, quantity: oldProduct.quantity - 1};
+      } else return oldProduct;
+    }));
+
     try {
       const response = await addCart(productId);
       addCartHelper(response.item);
-      setProducts(prevProducts => prevProducts.map((oldProduct: ProductType) => {
-        if (oldProduct._id === response.product._id) return response.product;
-        else return oldProduct;
-      }));
-
       if (callback) callback();
     } catch (e) {
       console.error('App handleAddCart ', e);
