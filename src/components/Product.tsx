@@ -24,7 +24,7 @@ const Product = (props: ProductProps) => {
     if (props.quantity >= 1) props.onAddCart(props._id);
   };
 
-  const buttonStyle = props.quantity === 0
+  const buttonStyle = props.quantity <= 0
     ? { cursor: 'not-allowed' }
     : {}
 

@@ -46,18 +46,18 @@ function App() {
 
 
   const addCartHelper = (newItem: ProductType) => {
-    console.log(newItem, cart);
-    if (cart.filter((item: ProductType) => item._id === newItem._id).length === 1) {
-      console.log('2');
-      setCart(prevCart => prevCart.map((item: ProductType) => {
-        if (item._id === newItem._id) {
-          return { ...item, quantity: item.quantity + 1 };
-        } else return item;
-      }));
-    } else {
-      console.log('1');
-      setCart(prevCart => prevCart.concat(newItem));
-    }
+    setCart(prevCart => {
+      const isExistingItem = () => prevCart.find(item => item._id === newItem._id);
+      if (isExistingItem()) {
+        return prevCart.map((item: ProductType) => {
+          if (item._id === newItem._id) {
+            return { ...item, quantity: item.quantity + 1 };
+          } else return item;
+        });
+      } else {
+        return prevCart.concat(newItem);
+      }
+    });
   };
 
   const handleAddProduct = async (newProduct: NewProductType, callback: CallbackType = null) => {
@@ -94,10 +94,17 @@ function App() {
   }
 
   const handleAddCart = async (productId: string, callback: CallbackType = null) => {
+    const product = products.find(product => product._id === productId);
+    if (!product || product.quantity === 0) return;
+
     try {
       const response = await addCart(productId);
       addCartHelper(response.item);
-      handleEdit(response.product);
+      setProducts(prevProducts => prevProducts.map((oldProduct: ProductType) => {
+        if (oldProduct._id === response.product._id) return response.product;
+        else return oldProduct;
+      }));
+
       if (callback) callback();
     } catch (e) {
       console.error('App handleAddCart ', e);
