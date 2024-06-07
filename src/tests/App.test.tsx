@@ -49,6 +49,7 @@ it('test adding new product', async () => {
   await user.type(inputQuantity, '240');
 
   await user.click(screen.getByRole('button', { name: 'Add' }));
+  render(<App />);
 
   const heading = screen.getAllByRole('heading', { level: 3 });
   const price = screen.getByDisplayValue(/13/);
